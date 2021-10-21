@@ -7,6 +7,7 @@ const errorHandler = require('./middleware/error');
 // Load env vars
 dotenv.config({ path: './config/config.env' });
 
+// IMPORT ROUTES
 const bootcamps = require('./routes/bootcamps');
 
 // Connect To Database
@@ -20,9 +21,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 app.use(express.json());
 
-// Routes
+// USE Routes
 app.use('/api/v1/bootcamps', bootcamps);
 
+// Global Error Handler
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
