@@ -9,6 +9,7 @@ dotenv.config({ path: './config/config.env' });
 
 // IMPORT ROUTES
 const bootcamps = require('./routes/bootcamps');
+const courses = require('./routes/courses');
 
 // Connect To Database
 connectDB();
@@ -23,6 +24,7 @@ app.use(express.json());
 
 // USE Routes
 app.use('/api/v1/bootcamps', bootcamps);
+app.use('/api/v1/courses', courses);
 
 // Global Error Handler
 app.use(errorHandler);
