@@ -2,8 +2,14 @@ const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const cors = require('cors');
 const fileupload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const rateLimit = require('express-rate-limit');
+const hpp = require('hpp');
+const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
 
@@ -23,10 +29,23 @@ connectDB();
 const app = express();
 
 // Middleware
+app.use(cors());
 app.use(express.json());
+app.use(helmet());
+app.use(xss());
+app.use(hpp());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 100,
+});
+
+app.use(limiter);
+app.use(mongoSanitize());
+app.use(cookieParser());
 app.use(fileupload());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cookieParser());
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
